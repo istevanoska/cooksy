@@ -1,0 +1,66 @@
+<div class="favorites-page">
+
+  <!-- ░░ HEADER ░░ -->
+  <header class="page-header">
+    <div class="page-header__left">
+      <span class="section-eyebrow">— Your collection</span>
+      <h1 class="page-title">
+        My <span class="page-title--accent">Favorites</span>
+      </h1>
+    </div>
+    <div class="page-header__right">
+      <div class="count-badge">
+        <span class="count-badge__num">{{ recipes.length }}</span>
+        <span class="count-badge__label">saved recipes</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ░░ EMPTY STATE ░░ -->
+  <div class="empty-state" *ngIf="recipes.length === 0">
+    <span class="empty-state__icon">✦</span>
+    <h2 class="empty-state__title">Nothing saved yet</h2>
+    <p class="empty-state__sub">Start exploring recipes and save the ones you love.</p>
+    <button class="browse-btn" routerLink="/">
+      Browse Recipes
+      <span>→</span>
+    </button>
+  </div>
+
+
+  <!-- ░░ GRID ░░ -->
+  <div class="recipes-grid" *ngIf="recipes.length > 0">
+
+    <div
+      class="recipe-card"
+      *ngFor="let recipe of recipes; let i = index"
+      [routerLink]="['/recipe', recipe.id]">
+
+      <div class="card-image">
+        <img *ngIf="recipe.image" [src]="recipe.image" [alt]="recipe.name" />
+        <div class="card-image__placeholder" *ngIf="!recipe.image">🍲</div>
+        <div class="card-image__overlay"></div>
+        <span class="card-index">{{ (i + 1).toString().padStart(2, '0') }}</span>
+        <span class="card-heart">♥</span>
+      </div>
+
+      <div class="card-body">
+        <h3 class="card-title">{{ recipe.name }}</h3>
+        <p class="card-desc">{{ recipe.description | slice:0:100 }}…</p>
+        <div class="card-footer">
+          <span class="cal-pill">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+              <path d="M6 1l1 3h3l-2.5 2 1 3L6 7.5 3.5 9l1-3L2 4h3l1-3z"
+                    stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/>
+            </svg>
+            {{ recipe.calories }} cal
+          </span>
+          <span class="card-arrow">→</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

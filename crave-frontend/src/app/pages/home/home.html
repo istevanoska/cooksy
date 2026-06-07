@@ -1,2 +1,182 @@
-<h1>Welcome to Crave 🍽️</h1>
-<p>Discover recipes, share ideas and cook something amazing.</p>
+<div class="page">
+
+  <!-- ░░ NAVBAR ░░ -->
+  <nav class="navbar">
+
+    <div class="logo">
+      <span class="logo-icon">✦</span>
+      <span class="logo-text">Cooksy</span>
+    </div>
+
+    <div class="nav-links">
+      <a routerLink="/" class="nav-link">
+        <span class="link-dot"></span>Home
+      </a>
+      <a class="nav-link">
+        <span class="link-dot"></span>Recipes
+      </a>
+      <a class="nav-link">
+        <span class="link-dot"></span>Categories
+      </a>
+      <a
+        routerLink="/favorites"
+        class="nav-link">
+
+        <span class="link-dot"></span>
+        Favorites
+
+      </a>
+    </div>
+
+    <div class="nav-user">
+      <ng-container *ngIf="currentUser; else loginTemplate">
+        <div class="user-info">
+          <div class="avatar">{{ currentUser.firstName?.charAt(0) }}</div>
+          <span class="user-name">{{ currentUser.firstName }}</span>
+        </div>
+        <button class="btn btn--ghost" [routerLink]="['/profile']">Profile</button>
+        <button class="btn btn--outline" (click)="logout()">Logout</button>
+      </ng-container>
+      <ng-template #loginTemplate>
+        <button class="btn btn--primary" [routerLink]="['/login']">Login</button>
+      </ng-template>
+    </div>
+
+  </nav>
+
+  <!-- ░░ HERO ░░ -->
+  <section class="hero">
+
+    <div class="hero-bg-text" aria-hidden="true">COOK</div>
+
+    <div class="hero-content">
+
+      <div class="badge">
+        <span class="badge-pulse"></span>
+        #1 Recipe Platform
+      </div>
+
+      <h1 class="hero-title">
+        <span class="hero-title__line">Find your next</span>
+        <span class="hero-title__line hero-title__line--accent">favorite meal</span>
+      </h1>
+
+      <p class="hero-sub">
+        Explore thousands of delicious recipes from around the world.
+      </p>
+
+      <div class="search-wrapper">
+        <span class="search-icon">⌕</span>
+        <input
+          type="text"
+          placeholder="Search recipes, ingredients, cuisines..."
+          [(ngModel)]="searchQuery"
+          (input)="filterRecipes()"
+          class="search-input"
+        />
+        <button class="search-btn">Search</button>
+      </div>
+
+    </div>
+
+    <div class="hero-deco" aria-hidden="true">
+      <div class="deco-circle deco-circle--1"></div>
+      <div class="deco-circle deco-circle--2"></div>
+      <div class="deco-ring"></div>
+    </div>
+
+  </section>
+
+  <!-- ░░ CATEGORIES ░░ -->
+  <section class="categories">
+    <div class="categories-label">Browse by type</div>
+    <div class="categories-track">
+      <div class="category">
+        <span class="category-emoji">🥞</span>
+        <span class="category-name">Breakfast</span>
+      </div>
+      <div class="category">
+        <span class="category-emoji">🍔</span>
+        <span class="category-name">Lunch</span>
+      </div>
+      <div class="category">
+        <span class="category-emoji">🍝</span>
+        <span class="category-name">Dinner</span>
+      </div>
+      <div class="category">
+        <span class="category-emoji">🍰</span>
+        <span class="category-name">Dessert</span>
+      </div>
+      <div class="category">
+        <span class="category-emoji">🥗</span>
+        <span class="category-name">Healthy</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ RECIPES ░░ -->
+  <section class="recipes-section">
+
+    <div class="section-header">
+      <div class="section-header__left">
+        <span class="section-eyebrow">— Trending now</span>
+        <h2 class="section-title">Trending Recipes</h2>
+      </div>
+      <div class="section-header__right">
+        <span class="recipe-count">{{ filteredRecipes.length }}<em> recipes</em></span>
+      </div>
+    </div>
+
+    <div class="recipes-grid">
+
+      <div
+        class="recipe-card"
+        *ngFor="let recipe of filteredRecipes; let i = index"
+        [routerLink]="['/recipe', recipe.id]"
+        [class.recipe-card--featured]="i === 0">
+
+        <div class="card-image">
+          <img
+            *ngIf="recipe.image"
+            [src]="recipe.image"
+            [alt]="recipe.name"
+          />
+          <div *ngIf="!recipe.image" class="card-image__placeholder">🍲</div>
+          <div class="card-image__overlay"></div>
+          <div class="card-index">{{ (i + 1).toString().padStart(2, '0') }}</div>
+        </div>
+
+        <div class="card-body">
+
+          <h3 class="card-title">{{ recipe.name }}</h3>
+
+          <p class="card-desc">
+            {{ recipe.description | slice:0:120 }}…
+          </p>
+
+          <div class="card-meta">
+            <span class="meta-pill">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/>
+                <path d="M6 3v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              </svg>
+              {{ recipe.totalTime }} min
+            </span>
+            <span class="meta-pill">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M6 1l1 3h3l-2.5 2 1 3L6 7.5 3.5 9l1-3L2 4h3l1-3z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/>
+              </svg>
+              {{ recipe.calories }} cal
+            </span>
+            <span class="card-arrow">→</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</div>

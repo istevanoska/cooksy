@@ -1,0 +1,309 @@
+/* ═══════════════════════════════════════════
+   COOKSY — Favorites Page (Dark Editorial)
+   ═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap');
+
+:host {
+  --c-bg:      #0a0a0a;
+  --c-card:    #161616;
+  --c-border:  rgba(255,255,255,0.07);
+  --c-text:    #f0ede8;
+  --c-muted:   rgba(240,237,232,0.45);
+  --c-accent:  #e8c97e;
+  --c-glow:    rgba(232,201,126,0.13);
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'DM Sans', sans-serif;
+
+  --radius-lg: 24px;
+
+  display: block;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+.favorites-page {
+  padding: 72px 48px 100px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) { padding: 40px 20px 60px; }
+}
+
+/* ── HEADER ─────────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 56px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--c-border);
+  animation: fade-up 0.8s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+.section-eyebrow {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--c-accent);
+  margin-bottom: 10px;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 0;
+
+  &--accent {
+    font-style: italic;
+    color: var(--c-accent);
+  }
+}
+
+.count-badge {
+  text-align: right;
+
+  &__num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 2.8rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--c-text);
+  }
+
+  &__label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c-muted);
+  }
+}
+
+/* ── EMPTY STATE ────────────────────────── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 16px;
+  text-align: center;
+  animation: fade-up 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s both;
+
+  &__icon {
+    font-size: 2.4rem;
+    color: var(--c-accent);
+    opacity: 0.4;
+    animation: spin-slow 10s linear infinite;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  &__sub {
+    font-size: 0.9rem;
+    color: var(--c-muted);
+    font-weight: 300;
+    margin: 0;
+    max-width: 320px;
+    line-height: 1.7;
+  }
+}
+
+.browse-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  background: var(--c-accent);
+  color: #0a0a0a;
+  border: none;
+  border-radius: 100px;
+  padding: 13px 28px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.22s;
+
+  span { transition: transform 0.22s; }
+
+  &:hover {
+    background: #f5d898;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(232,201,126,0.2);
+    span { transform: translateX(4px); }
+  }
+}
+
+/* ── GRID ───────────────────────────────── */
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 20px;
+  animation: fade-up 0.8s cubic-bezier(0.16,1,0.3,1) 0.15s both;
+
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
+}
+
+/* ── CARD ───────────────────────────────── */
+.recipe-card {
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+
+  &:hover {
+    transform: translateY(-6px);
+    border-color: rgba(232,201,126,0.2);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.45), 0 0 0 1px rgba(232,201,126,0.07);
+
+    .card-image img        { transform: scale(1.06); }
+    .card-image__overlay   { opacity: 0.55; }
+    .card-heart            { opacity: 1; transform: scale(1) translateY(0); }
+    .card-arrow            { transform: translateX(4px); opacity: 1; }
+  }
+}
+
+.card-image {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: #1a1a1a;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  &__placeholder {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    font-size: 3rem;
+    background: linear-gradient(135deg, #161616, #222);
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10,10,10,0.7) 0%, transparent 55%);
+    transition: opacity 0.3s;
+  }
+}
+
+.card-index {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--c-accent);
+  background: rgba(10,10,10,0.72);
+  border: 1px solid rgba(232,201,126,0.2);
+  padding: 3px 9px;
+  border-radius: 100px;
+  letter-spacing: 0.06em;
+  backdrop-filter: blur(8px);
+}
+
+.card-heart {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: 1.1rem;
+  color: #e85454;
+  opacity: 0;
+  transform: scale(0.6) translateY(-4px);
+  transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+  filter: drop-shadow(0 2px 6px rgba(232,84,84,0.5));
+}
+
+.card-body {
+  padding: 22px 22px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin: 0 0 10px;
+  color: var(--c-text);
+}
+
+.card-desc {
+  font-size: 0.82rem;
+  color: var(--c-muted);
+  line-height: 1.65;
+  font-weight: 300;
+  margin: 0 0 18px;
+  flex: 1;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cal-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--c-border);
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--c-muted);
+  letter-spacing: 0.02em;
+}
+
+.card-arrow {
+  font-size: 1.1rem;
+  color: var(--c-accent);
+  opacity: 0.4;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+/* ── ANIMATIONS ─────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}

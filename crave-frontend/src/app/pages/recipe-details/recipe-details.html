@@ -1,0 +1,202 @@
+<!-- ░░ NAVBAR ░░ -->
+<nav class="navbar">
+
+  <div class="logo">
+    <span class="logo-icon">✦</span>
+    <span class="logo-text">Cooksy</span>
+  </div>
+
+  <div class="nav-links">
+    <a routerLink="/" class="nav-link">
+      <span class="link-dot"></span>Home
+    </a>
+    <a class="nav-link">
+      <span class="link-dot"></span>Recipes
+    </a>
+    <a class="nav-link">
+      <span class="link-dot"></span>Categories
+    </a>
+    <a
+      routerLink="/favorites"
+      class="nav-link">
+
+      <span class="link-dot"></span>
+      Favorites
+
+    </a>
+  </div>
+
+  <div class="nav-user">
+    <ng-container *ngIf="currentUser; else loginTemplate">
+      <div class="user-info">
+        <div class="avatar">{{ currentUser.firstName?.charAt(0) }}</div>
+        <span class="user-name">{{ currentUser.firstName }}</span>
+      </div>
+      <button class="btn btn--ghost" [routerLink]="['/profile']">Profile</button>
+      <button class="btn btn--outline" (click)="logout()">Logout</button>
+    </ng-container>
+    <ng-template #loginTemplate>
+      <button class="btn btn--primary" [routerLink]="['/login']">Login</button>
+    </ng-template>
+  </div>
+
+</nav>
+<div *ngIf="recipe" class="details-page">
+
+  <!-- ░░ HERO ░░ -->
+  <section class="hero-section">
+
+    <div class="hero-image">
+      <img *ngIf="recipe.image" [src]="recipe.image" alt="Recipe image" />
+      <div class="hero-image__placeholder" *ngIf="!recipe.image">🍲</div>
+      <div class="hero-image__overlay"></div>
+
+      <!-- floating recipe number / decorative -->
+      <div class="hero-image__label" aria-hidden="true">Recipe</div>
+    </div>
+
+    <div class="hero-content">
+
+      <div class="badge">
+        <span class="badge-dot"></span>
+        Cooksy Recipe
+      </div>
+
+      <h1 class="hero-title">{{ recipe.name }}</h1>
+
+      <button class="favorite-btn" (click)="saveRecipe()">
+        <span class="favorite-btn__icon">♥</span>
+        Save Recipe
+      </button>
+
+      <p class="description">{{ recipe.description }}</p>
+
+      <div class="stats">
+
+        <div class="stat-card">
+          <div class="stat-card__icon">🔥</div>
+          <div class="stat-card__value">{{ recipe.calories }}</div>
+          <div class="stat-card__label">Calories</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card__icon">⏱</div>
+          <div class="stat-card__value">{{ recipe.totalTime }}</div>
+          <div class="stat-card__label">Minutes</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card__icon">💪</div>
+          <div class="stat-card__value">{{ recipe.proteins }}</div>
+          <div class="stat-card__label">Protein</div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ░░ DETAILS GRID ░░ -->
+  <section class="details-grid">
+
+    <div class="info-card">
+      <div class="info-card__header">
+        <span class="info-card__eyebrow">What you need</span>
+        <h2 class="info-card__title">Ingredients</h2>
+      </div>
+      <ul class="ingredients-list">
+        <li *ngFor="let ingredient of ingredients; let i = index" class="ingredient-item">
+          <span class="ingredient-item__num">{{ (i + 1).toString().padStart(2, '0') }}</span>
+          <span class="ingredient-item__text">{{ ingredient }}</span>
+          <span class="ingredient-item__check">✓</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card__header">
+        <span class="info-card__eyebrow">Step by step</span>
+        <h2 class="info-card__title">Instructions</h2>
+      </div>
+      <p class="instructions-text">
+        {{ recipe.instructions || 'Instructions are not available for this recipe.' }}
+      </p>
+    </div>
+
+  </section>
+
+  <!-- ░░ REVIEWS ░░ -->
+  <section class="reviews-section">
+
+    <div class="reviews-header">
+      <div class="reviews-header__left">
+        <span class="section-eyebrow">— What people say</span>
+        <h2 class="reviews-title">Reviews</h2>
+      </div>
+      <div class="reviews-count">
+        <span class="reviews-count__num">{{ reviews.length }}</span>
+        <span class="reviews-count__label">reviews</span>
+      </div>
+    </div>
+
+    <div class="reviews-list">
+
+      <div class="review-card" *ngFor="let review of reviews">
+        <div class="review-card__top">
+
+          <div class="review-stars">
+            <ng-container *ngFor="let s of [1,2,3,4,5]">
+              <span [class.active]="s <= review.rating">★</span>
+            </ng-container>
+          </div>
+
+          <div class="review-date">
+            {{ review.createdAt | date:'mediumDate' }}
+          </div>
+
+        </div>
+        <p class="review-comment">{{ review.comment }}</p>
+      </div>
+
+      <div class="empty-reviews" *ngIf="reviews.length === 0">
+        <span class="empty-reviews__icon">✦</span>
+        <p>No reviews yet — be the first!</p>
+      </div>
+
+    </div>
+
+    <!-- Write review -->
+    <div class="add-review">
+
+      <div class="add-review__header">
+        <span class="section-eyebrow">— Share your thoughts</span>
+        <h2 class="add-review__title">Write a Review</h2>
+      </div>
+
+      <div class="rating-selector">
+        <span class="rating-selector__label">Your rating</span>
+        <div class="star-picker">
+          <label *ngFor="let s of [1,2,3,4,5]">
+            <input type="radio" name="rating" [value]="s" [(ngModel)]="reviewRating" hidden />
+            <span class="star" [class.active]="s <= reviewRating">★</span>
+          </label>
+        </div>
+      </div>
+
+      <textarea
+        [(ngModel)]="reviewComment"
+        placeholder="Tell us what you think about this recipe..."
+        class="review-textarea">
+      </textarea>
+
+      <button class="submit-btn" (click)="submitReview()">
+        Post Review
+        <span class="submit-btn__arrow">→</span>
+      </button>
+
+    </div>
+
+  </section>
+
+</div>
