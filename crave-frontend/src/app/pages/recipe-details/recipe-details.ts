@@ -47,37 +47,23 @@ export class RecipeDetails {
 
   loadRecipe(id: number) {
 
-    this.loading = true;
+    console.log("LOAD RECIPE", id);
 
     this.recipeService
       .getRecipeById(id)
       .subscribe({
         next: (data) => {
 
+          console.log("RECIPE DATA", data);
+
           this.recipe = data;
 
-          this.loading = false;
         },
         error: (err) => {
-          console.error(err);
-          this.loading = false;
-        }
-      });
-
-    this.loadReviews(id);
-
-    this.recipeService
-      .getRecipeIngredients(id)
-      .subscribe({
-        next: (data) => {
-          this.ingredients = data;
-        },
-        error: (err) => {
-          console.error(err);
+          console.error("RECIPE ERROR", err);
         }
       });
   }
-
   loadReviews(recipeId: number) {
 
     this.recipeService

@@ -5,6 +5,8 @@ import com.recepie.recepieapp.model.Recipe;
 import com.recepie.recepieapp.repository.RecipeRepository;
 import com.recepie.recepieapp.model.RecipeReview;
 import com.recepie.recepieapp.repository.RecipeReviewRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -172,5 +174,17 @@ public class RecipeController {
                 },
                 userId
         );
+    }
+
+    @GetMapping("/recipes/search")
+    public Page<Recipe> searchRecipes(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int page){
+
+        return recipeRepository
+                .findByNameContainingIgnoreCase(
+                        query,
+                        PageRequest.of(page, 20)
+                );
     }
 }

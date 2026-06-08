@@ -69,9 +69,8 @@
         <span class="search-icon">⌕</span>
         <input
           type="text"
-          placeholder="Search recipes, ingredients, cuisines..."
           [(ngModel)]="searchQuery"
-          (input)="filterRecipes()"
+          (input)="searchRecipes()"
           class="search-input"
         />
         <button class="search-btn">Search</button>
@@ -137,9 +136,8 @@
 
         <div class="card-image">
           <img
-            *ngIf="recipe.image"
-            [src]="recipe.image"
-            [alt]="recipe.name"
+            [src]="recipe.image || 'img.png'"
+            alt="recipe"
           />
           <div *ngIf="!recipe.image" class="card-image__placeholder">🍲</div>
           <div class="card-image__overlay"></div>
@@ -176,6 +174,14 @@
       </div>
 
     </div>
+    <button
+      *ngIf="hasMore"
+      class="load-more-btn"
+      (click)="loadMore()">
+
+      Load More
+
+    </button>
 
   </section>
 

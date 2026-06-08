@@ -37,7 +37,10 @@
       [routerLink]="['/recipe', recipe.id]">
 
       <div class="card-image">
-        <img *ngIf="recipe.image" [src]="recipe.image" [alt]="recipe.name" />
+        <img
+          [src]="recipe.image || 'img.png'"
+          alt="recipe"
+        />
         <div class="card-image__placeholder" *ngIf="!recipe.image">🍲</div>
         <div class="card-image__overlay"></div>
         <span class="card-index">{{ (i + 1).toString().padStart(2, '0') }}</span>

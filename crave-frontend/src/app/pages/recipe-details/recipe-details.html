@@ -47,7 +47,10 @@
   <section class="hero-section">
 
     <div class="hero-image">
-      <img *ngIf="recipe.image" [src]="recipe.image" alt="Recipe image" />
+      <img
+        [src]="recipe.image || 'img.png'"
+        alt="recipe"
+      />
       <div class="hero-image__placeholder" *ngIf="!recipe.image">🍲</div>
       <div class="hero-image__overlay"></div>
 

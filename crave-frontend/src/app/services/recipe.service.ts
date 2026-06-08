@@ -55,5 +55,10 @@ export class RecipeService {
     );
 
   }
+  searchRecipes(query: string, page: number){
+    return this.http.get(
+      `${this.apiUrl}/search?query=${query}&page=${page}`
+    );
+  }
 
 }
