@@ -155,10 +155,4 @@ Planned and suggested features to add (many of these are mentioned by the projec
 - Database connection errors: make sure PostgreSQL is running and the `spring.datasource.*` values in `application.properties` are correct. Check the port (5432 vs 5433), database name, user and password.
 - Port conflicts: backend defaults to 8080, frontend to 4200. Change them if needed.
 
-## Where to go next
-
-1. If you want me to, I can update `src/main/resources/application.properties` to use the credentials you provided and attempt to start the backend locally (I can also add an `.env`-style config or support for environment variables).
-2. Implement secure authentication (JWT) and password hashing (BCrypt).
-3. Add endpoints for fridge items and a recommendation engine — I can scaffold these endpoints and a simple recommendation algorithm.
-
 ---

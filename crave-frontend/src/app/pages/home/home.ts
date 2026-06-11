@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RecipeService } from '../../services/recipe.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -23,7 +23,11 @@ export class Home implements OnInit {
 
   searchQuery: string = '';
 
-  constructor(private recipeService: RecipeService){}
+
+  constructor(
+    private recipeService: RecipeService,
+    private router: Router
+  ) {}
 
   // ngOnInit() {
   //
@@ -50,17 +54,11 @@ export class Home implements OnInit {
   // }
   ngOnInit() {
 
-    console.log("HOME INIT");
+    this.searchQuery = '';
+    this.page = 0;
+    this.hasMore = true;
 
-    this.recipeService.getRecipes()
-      .subscribe(data => {
-
-        console.log("DATA", data);
-
-        this.recipes = data;
-        this.filteredRecipes = data;
-
-      });
+    this.loadRecipes();
   }
   filterRecipes() {
 
@@ -120,6 +118,37 @@ export class Home implements OnInit {
         this.hasMore = !data.last;
 
       });
+  }
+  loadRecipes() {
+
+    this.recipeService.getRecipes()
+      .subscribe(data => {
+
+        this.recipes = data;
+        this.filteredRecipes = data;
+
+      });
+
+    this.recipeService.getTrendingRecipes()
+      .subscribe(data => {
+
+        this.trendingRecipes = data;
+
+        console.log("TRENDING", data);
+
+      });
+  }
+  goToSearch() {
+
+    this.router.navigate(
+      ['/recipes'],
+      {
+        queryParams: {
+          q: this.searchQuery
+        }
+      }
+    );
+
   }
 
 }

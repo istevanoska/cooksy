@@ -44,6 +44,10 @@ public class Recipe {
     @Column(name = "external_id")
     private Integer externalId;
 
+    @Column(columnDefinition = "TEXT")
+    private String steps;
+
+
     public Recipe(){}
 
     public Long getId() { return id; }
@@ -101,4 +105,12 @@ public class Recipe {
     public void setCuisineId(Integer cuisineId) { this.cuisineId = cuisineId; }
 
     public void setExternalId(Integer externalId) { this.externalId = externalId; }
+
+    public String getSteps() {
+        return steps;
+    }
+
+    public void setSteps(String steps) {
+        this.steps = steps;
+    }
 }

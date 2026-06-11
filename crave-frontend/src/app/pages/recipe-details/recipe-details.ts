@@ -26,7 +26,10 @@ export class RecipeDetails {
   isFavorite = false;
 
   loading = true;
+
   currentUser:any;
+
+  parsedSteps: string[] = [];
 
 
   constructor(
@@ -57,6 +60,30 @@ export class RecipeDetails {
           console.log("RECIPE DATA", data);
 
           this.recipe = data;
+
+          if (data.steps) {
+
+            let text = data.steps;
+
+            text = text.substring(1, text.length - 1);
+
+            this.parsedSteps = text
+              .split("',")
+              .map((s: string) =>
+                s.replace(/'/g, '').trim()
+              )
+              .filter((s: string) => s.length > 0);
+
+            console.log("PARSED STEPS", this.parsedSteps);
+          }
+
+          this.loadReviews(id);
+
+          this.recipeService
+            .getRecipeIngredients(id)
+            .subscribe(ingredients => {
+              this.ingredients = ingredients;
+            });
 
         },
         error: (err) => {
@@ -136,4 +163,21 @@ export class RecipeDetails {
 
     window.location.reload();
   }
+  // get parsedSteps(): string[] {
+  //
+  //   if (!this.recipe?.steps) {
+  //     return [];
+  //   }
+  //
+  //   let text = this.recipe.steps;
+  //
+  //   text = text.substring(1, text.length - 1);
+  //
+  //   return text
+  //     .split("',")
+  //     .map((s: string) =>
+  //       s.replace(/'/g, '').trim()
+  //     )
+  //     .filter((s: string) => s.length > 0);
+  // }
 }

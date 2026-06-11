@@ -122,9 +122,12 @@
         <span class="info-card__eyebrow">Step by step</span>
         <h2 class="info-card__title">Instructions</h2>
       </div>
-      <p class="instructions-text">
-        {{ recipe.instructions || 'Instructions are not available for this recipe.' }}
-      </p>
+
+      <ol class="instructions-list">
+        <li *ngFor="let step of parsedSteps">
+          {{ step }}
+        </li>
+      </ol>
     </div>
 
   </section>

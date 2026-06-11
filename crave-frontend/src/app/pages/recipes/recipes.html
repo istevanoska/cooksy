@@ -1,0 +1,146 @@
+<nav class="navbar">
+
+  <div class="logo">
+    <span class="logo-icon">✦</span>
+    <span class="logo-text">Cooksy</span>
+  </div>
+
+  <div class="nav-links">
+    <a routerLink="/"          class="nav-link"><span class="link-dot"></span>Home</a>
+    <a routerLink="/recipes"   class="nav-link active"><span class="link-dot"></span>Recipes</a>
+    <a                         class="nav-link"><span class="link-dot"></span>Categories</a>
+    <a routerLink="/favorites" class="nav-link"><span class="link-dot"></span>Favorites</a>
+  </div>
+
+  <div class="nav-user">
+    <div class="user-info">
+      <div class="avatar">{{ currentUser?.firstName?.charAt(0) }}</div>
+      <span class="user-name">{{ currentUser?.firstName }}</span>
+    </div>
+    <button class="btn btn--ghost"    [routerLink]="['/profile']">Profile</button>
+    <button class="btn btn--outline"  (click)="logout()">Logout</button>
+  </div>
+
+</nav>
+
+<div class="recipes-page">
+
+  <!-- ░░ HEADER ░░ -->
+  <header class="page-header">
+    <div class="page-header__left">
+      <span class="section-eyebrow">— Explore the menu</span>
+      <h1 class="page-title">
+        Discover
+        <em class="page-title--accent">Recipes</em>
+      </h1>
+    </div>
+    <div class="page-header__right">
+      <div class="count-badge">
+        <span class="count-badge__num">{{ recipes.length }}</span>
+        <span class="count-badge__label">recipes found</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ░░ FILTERS ░░ -->
+  <div class="filters-panel">
+
+    <div class="search-wrapper">
+      <svg class="search-wrapper__icon" width="15" height="15" viewBox="0 0 16 16" fill="none">
+        <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        placeholder="Search recipes, ingredients…"
+        class="search-input"
+        (keyup.enter)="searchRecipes()"
+      />
+      <button class="search-btn" (click)="searchRecipes()">Search</button>
+    </div>
+
+    <div class="filter-row">
+
+      <div class="filter-group">
+        <label class="filter-label">Sort by</label>
+        <div class="select-wrapper">
+          <select [(ngModel)]="sortBy" (change)="sortRecipes()" class="filter-select">
+            <option value="name">Name</option>
+            <option value="calories">Calories</option>
+            <option value="time">Time</option>
+          </select>
+          <svg class="select-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none">
+            <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Max Calories</label>
+        <input
+          type="number"
+          [(ngModel)]="maxCalories"
+          placeholder="e.g. 600"
+          class="filter-input"
+        />
+      </div>
+
+      <button class="apply-btn" (click)="applyFilters()">
+        Apply Filters
+        <span class="apply-btn__arrow">→</span>
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- ░░ GRID ░░ -->
+  <div class="recipes-grid">
+
+    <div
+      class="recipe-card"
+      *ngFor="let recipe of recipes; let i = index"
+      [class.recipe-card--featured]="i === 0">
+
+      <div class="card-image" [routerLink]="['/recipe', recipe.id]">
+        <img [src]="recipe.image || 'img.png'" [alt]="recipe.name" />
+        <div class="card-image__overlay"></div>
+        <span class="card-index">{{ (i + 1).toString().padStart(2,'0') }}</span>
+      </div>
+
+      <div class="card-body">
+
+        <h3 class="card-title" [routerLink]="['/recipe', recipe.id]">
+          {{ recipe.name }}
+        </h3>
+
+        <p class="card-desc">
+          {{ recipe.description | slice:0:100 }}…
+        </p>
+
+        <div class="card-footer">
+          <span class="meta-pill">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+              <path d="M6 1l1 3h3l-2.5 2 1 3L6 7.5 3.5 9l1-3L2 4h3l1-3z"
+                    stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/>
+            </svg>
+            {{ recipe.calories }} cal
+          </span>
+          <span class="meta-pill">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+              <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/>
+              <path d="M6 3v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+            {{ recipe.totalTime }} min
+          </span>
+          <span class="card-arrow">→</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

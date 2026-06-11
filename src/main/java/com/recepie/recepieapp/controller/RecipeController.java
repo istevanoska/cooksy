@@ -16,8 +16,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins="http://localhost:4200")
-public class RecipeController {
+@CrossOrigin(
+        origins = "http://localhost:4200",
+        allowedHeaders = "*",
+        methods = {
+                RequestMethod.GET,
+                RequestMethod.POST,
+                RequestMethod.PUT,
+                RequestMethod.DELETE,
+                RequestMethod.OPTIONS
+        }
+)public class RecipeController {
 
     private final RecipeRepository recipeRepository;
     private final RecipeReviewRepository recipeReviewRepository;
@@ -40,9 +49,11 @@ public class RecipeController {
     @GetMapping("/recipes/{id}")
     public Recipe getRecipeById(@PathVariable Long id) {
 
-        return recipeRepository
-                .findById(id)
-                .orElseThrow();
+        Recipe recipe = recipeRepository.findById(id).orElseThrow();
+
+        System.out.println("STEPS = " + recipe.getSteps());
+
+        return recipe;
     }
     @GetMapping("/recipes/{id}/reviews")
     public List<RecipeReview> getRecipeReviews(
@@ -128,6 +139,21 @@ public class RecipeController {
                 id
         );
     }
+    @DeleteMapping("/recipes/{id}/favorite")
+    public void removeFavorite(
+            @PathVariable Integer id,
+            @RequestParam Integer userId){
+
+        jdbcTemplate.update(
+                """
+                DELETE FROM recipe_favorite
+                WHERE user_id = ?
+                AND recipe_id = ?
+                """,
+                userId,
+                id
+        );
+    }
 
     @GetMapping("/users/{userId}/favorites")
     public List<Recipe> getFavorites(
@@ -187,4 +213,41 @@ public class RecipeController {
                         PageRequest.of(page, 20)
                 );
     }
+    @GetMapping("/recipes/trending")
+    public List<Recipe> getTrendingRecipes() {
+
+        String sql = """
+        SELECT r.*
+        FROM recipe r
+        JOIN (
+            SELECT recipe_id, COUNT(*) AS views
+            FROM recipe_view
+            GROUP BY recipe_id
+            ORDER BY views DESC
+            LIMIT 4
+        ) rv
+        ON r.id = rv.recipe_id
+        ORDER BY rv.views DESC
+        """;
+
+        return jdbcTemplate.query(
+                sql,
+                (rs, rowNum) -> {
+
+                    Recipe recipe = new Recipe();
+
+                    recipe.setId(rs.getLong("id"));
+                    recipe.setName(rs.getString("name"));
+                    recipe.setDescription(rs.getString("description"));
+                    recipe.setCalories(rs.getInt("calories"));
+                    recipe.setProteins(rs.getInt("proteins"));
+                    recipe.setTotalTime(rs.getInt("total_time"));
+                    recipe.setImage(rs.getString("image"));
+
+                    return recipe;
+                }
+        );
+    }
+
+
 }

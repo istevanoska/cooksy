@@ -60,5 +60,20 @@ export class RecipeService {
       `${this.apiUrl}/search?query=${query}&page=${page}`
     );
   }
+  removeFavorite(
+    recipeId:number,
+    userId:number
+  ){
+
+    return this.http.delete(
+      `http://localhost:8080/api/recipes/${recipeId}/favorite?userId=${userId}`
+    );
+
+  }
+  getTrendingRecipes() {
+    return this.http.get<any[]>(
+      `${this.apiUrl}/trending`
+    );
+  }
 
 }

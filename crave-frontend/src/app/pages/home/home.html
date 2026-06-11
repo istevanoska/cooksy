@@ -57,7 +57,7 @@
       </div>
 
       <h1 class="hero-title">
-        <span class="hero-title__line">Find your next</span>
+        <span class="hero-title__line">Find your next </span>
         <span class="hero-title__line hero-title__line--accent">favorite meal</span>
       </h1>
 
@@ -70,10 +70,16 @@
         <input
           type="text"
           [(ngModel)]="searchQuery"
-          (input)="searchRecipes()"
+          (keyup.enter)="goToSearch()"
           class="search-input"
         />
-        <button class="search-btn">Search</button>
+        <button
+          class="search-btn"
+          (click)="goToSearch()">
+
+          Search
+
+        </button>
       </div>
 
     </div>
@@ -130,7 +136,7 @@
 
       <div
         class="recipe-card"
-        *ngFor="let recipe of filteredRecipes; let i = index"
+        *ngFor="let recipe of trendingRecipes; let i = index"
         [routerLink]="['/recipe', recipe.id]"
         [class.recipe-card--featured]="i === 0">
 
@@ -176,7 +182,7 @@
     </div>
     <button
       *ngIf="hasMore"
-      class="load-more-btn"
+      class="load-more-btn search-btn" style="margin-top: 20px;"
       (click)="loadMore()">
 
       Load More
